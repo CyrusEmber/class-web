@@ -1,0 +1,30 @@
+<p>register component</p>
+<form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+
+  <div>
+    <label for="account">
+      Account
+    </label>
+    <br>
+    <input id="account" type="text" formControlName="account">
+  </div>
+
+  <div>
+    <label for="password">
+      Password
+    </label>
+    <br>
+    <input id="password" type="password" formControlName="password">
+  </div>
+
+  <div>
+    <label for="ConfirmedPassword">
+      Confirm Password
+    </label>
+    <br>
+    <input id="ConfirmedPassword" type="password" formControlName="ConfirmedPassword">
+  </div>
+
+  <button class="button" type="submit">Confirm</button>
+
+</form>

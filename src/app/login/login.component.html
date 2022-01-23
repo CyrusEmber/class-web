@@ -1,0 +1,21 @@
+<form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+
+  <div>
+    <label for="account">
+      Account
+    </label>
+    <br>
+    <input id="account" type="text" formControlName="account">
+  </div>
+
+  <div>
+    <label for="account">
+      Password
+    </label>
+    <br>
+    <input id="password" type="password" formControlName="password">
+  </div>
+
+  <button class="button" type="submit">Confirm</button>
+
+</form>

@@ -1,0 +1,55 @@
+<app-student-search></app-student-search>
+
+<div *ngIf="student">
+
+  <h2>{{student.name}} Details</h2>
+
+  <div><p class="text">name: {{student.name}}</p></div>
+  <div><p class="text">date: {{student.date}}</p></div>
+  <div><p class="text">Class balance: {{student.payment / student.paymentPerClass}}</p></div>
+  <div *ngIf="showExpansion">
+    <div><span>id: </span>{{student.id}}</div>
+    <div><span>grade: </span>{{student.grade}}</div>
+    <div><span>payment: </span>{{student.payment}}</div>
+    <div><span>paymentPerClass: </span>{{student.paymentPerClass}}</div>
+  </div>
+  <button (click)="expand()">Expand</button>
+  <button (click)="modify()">Modify</button>
+
+  <div *ngIf="showModifyCom">
+    <label for="student-name">student name: </label>
+    <br>
+    <input id="student-name" [(ngModel)]="student.name" placeholder="name" #Name>
+
+    <br>
+    <label for="student-grade">student grade: </label>
+    <br>
+    <input id="student-grade" [(ngModel)]="student.grade" placeholder="grade" #Grade>
+
+    <br>
+    <label for="student-date">student date: </label>
+    <br>
+    <input id="student-date" [(ngModel)]="student.date" placeholder="date" #Date>
+
+    <br>
+    <label for="student-payment">student payment: </label>
+    <br>
+    <input id="student-payment" [(ngModel)]="student.payment" placeholder="payment" #Payment>
+
+    <br>
+    <label for="student-paymentPerClass">student paymentPerClass: </label>
+    <br>
+    <input id="student-paymentPerClass" [(ngModel)]="student.paymentPerClass" placeholder="paymentPerClass" #PaymentPerClass>
+    <br>
+    // edit student id only if you are administrator
+    <br>
+    <label for="student-id">student id: </label>
+    <br>
+    <input id="student-id" [(ngModel)]="student.id" placeholder="id">
+    <br>
+    <button (click)="save(Name.value, Grade.value, Payment.value, PaymentPerClass.value, Date.value)">save change</button>
+  </div>
+
+  <button (click)="goBack()">go back</button>
+
+</div>

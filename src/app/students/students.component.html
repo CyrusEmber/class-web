@@ -1,0 +1,17 @@
+<div *ngIf="selectedStudent">
+  <label for="name">Change name: </label>
+  <input id="name" [(ngModel)]="selectedStudent.name" placeholder="name">
+
+</div>
+
+
+<h2>My Students</h2>
+<app-student-search></app-student-search>
+<ul class="students">
+  <li *ngFor="let student of students">
+    <a routerLink="/detail/{{student.id}}">
+      <span class="badge">{{student.id}}</span> {{student.name}}
+    </a>
+  </li>
+</ul>
+

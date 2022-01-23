@@ -1,0 +1,25 @@
+<div>
+  <p>带星号的为必填项</p>
+  <label for="Name">Name*: </label>
+  <br>
+  <input id="Name" #Name />
+  <br>
+  <label for="Grade">Grade: </label>
+  <br>
+  <input id="Grade" #Grade />
+  <br>
+  <label for="Payment">Payment: </label>
+  <br>
+  <input id="Payment" #Payment />
+  <br>
+  <label for="PaymentPerClass">PaymentPerClass: </label>
+  <br>
+  <input id="PaymentPerClass" #PaymentPerClass />
+  <br>
+
+
+  <!-- (click) passes input value to add() and then clears the input -->
+  <button class="add-button" (click)="add(Name.value, Grade.value, Payment.value, PaymentPerClass.value); Name.value=''; Grade.value=''; Payment.value='';PaymentPerClass.value='';">
+    Confirm Add
+  </button>
+</div>
