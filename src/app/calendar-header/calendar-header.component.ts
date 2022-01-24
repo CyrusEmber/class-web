@@ -8,14 +8,15 @@ import { CalendarView } from 'angular-calendar';
 })
 export class CalendarHeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
+  // type LogLevelStrings = keyof typeof LogLevel;
+  @Input() view: CalendarView = CalendarView.Month ;
 
-  @Input() view?: CalendarView;
-
-  @Input() viewDate?: Date;
+  @Input() viewDate: Date = new Date();
 
   @Input() locale: string = 'en';
 

@@ -25,9 +25,6 @@ import { StudentSearchComponent } from './student-search/student-search.componen
 import { CalendarHeaderComponent } from './calendar-header/calendar-header.component';
 
 
-
-
-
 @NgModule({
   declarations: [
     AppComponent,
