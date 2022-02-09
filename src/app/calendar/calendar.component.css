@@ -1,7 +1,27 @@
-button {
-  margin-top: 10px;
-  background-color: #eee;
-  padding: 0.5rem;
-  border-radius: 5px;
-  font-size: 1rem;
+li {
+  list-style-type: none;
 }
+.li a {
+  border-bottom: 1px solid gray;
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
+  display: inline-block;
+  width: 100%;
+  max-width: 600px;
+  padding: .5rem;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: black;
+}
+
+.li a:hover {
+  background-color: #435A60;
+  color: white;
+}
+
+ul {
+  margin-top: 0;
+  padding-left: 0;
+}
+
+

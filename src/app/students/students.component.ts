@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Student } from '../student'
-import { Students } from '../mock-student';
 import { StudentService } from "../student.service";
 import { MessageService } from "../message.service";
 

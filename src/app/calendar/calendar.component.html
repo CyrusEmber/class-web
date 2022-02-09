@@ -1,3 +1,4 @@
+<br>
 <app-calendar-header [(view)]="view" [(viewDate)]="viewDate">
 </app-calendar-header>
 
@@ -16,14 +17,21 @@
     *ngSwitchCase="'month'"
     [viewDate]="viewDate"
     [events]="events"
+    [refresh]="refresh"
+    [activeDayIsOpen]="activeDayIsOpen"
     (columnHeaderClicked)="clickedColumn = $event.isoDayNumber"
-    (dayClicked)="clickedDate = $event.day.date"
+    (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
   >
   </mwl-calendar-month-view>
   <mwl-calendar-week-view
     *ngSwitchCase="'week'"
     [viewDate]="viewDate"
     [events]="events"
+    [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
     (dayHeaderClicked)="clickedDate = $event.day.date"
     (hourSegmentClicked)="clickedDate = $event.date"
   >
@@ -32,7 +40,179 @@
     *ngSwitchCase="'day'"
     [viewDate]="viewDate"
     [events]="events"
+    [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
     (hourSegmentClicked)="clickedDate = $event.date"
   >
   </mwl-calendar-day-view>
 </div>
+<br>
+<h3>
+  Edit classes
+  <button class="btn btn-info float-right" (click)="saveEvent()">
+    Save events
+  </button>
+  <button class="btn btn-primary float-right" (click)="addEvent()">
+    Add new
+  </button>
+
+  <div class="clearfix"></div>
+</h3>
+<ul>
+    <p>Name list:</p>
+    <li *ngFor="let student of students$ | async" >
+      <a>
+        {{student.name}}
+      </a>
+    </li>
+
+</ul>
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Title</th>
+      <th>Color</th>
+      <th>Starts at</th>
+      <th>Ends at</th>
+      <th>Remove</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let event of events">
+      <td>
+        <input
+          type="text"
+          class="form-control"
+          id="{{event.id}}"
+
+          [(ngModel)]="event.id"
+          (keyup)="refresh.next()"
+          #searchBox
+          (input)="search(searchBox.value)"
+          placeholder="name"
+          (blur) = "deleteSearch()"
+        />
+
+      </td>
+
+      <td>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="event.title"
+          (keyup)="refresh.next()"
+          #Title
+        />
+      </td>
+      <td>
+        <input
+          type="color"
+          [(ngModel)]="event.color"
+          (change)="refresh.next()"
+          #Color
+        />
+      </td>
+      <td>
+        <input
+          class="form-control"
+          type="text"
+          mwlFlatpickr
+          [(ngModel)]="event.start"
+          (ngModelChange)="refresh.next()"
+          [altInput]="true"
+          [convertModelValue]="true"
+          [enableTime]="true"
+          dateFormat="Y-m-dTH:i"
+          altFormat="F j, Y H:i"
+          placeholder="Not set"
+          #Start
+        />
+      </td>
+      <td>
+        <input
+          class="form-control"
+          type="text"
+          mwlFlatpickr
+          [(ngModel)]="event.end"
+          (ngModelChange)="refresh.next()"
+          [altInput]="true"
+          [convertModelValue]="true"
+          [enableTime]="true"
+          dateFormat="Y-m-dTH:i"
+          altFormat="F j, Y H:i"
+          placeholder="Not set"
+          #End
+        />
+      </td>
+      <td>
+        <button class="btn btn-danger" (click)="deleteEvent(event); delete(event)">
+          Delete
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- popup window for modify event -->
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Event action occurred</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div style="margin-left: 1rem">
+    <p type="text">带星号的为必填项</p>
+    <div >
+      <label for="Name">Name: </label>
+      <input type="text" class="form-control" id="Name"  #Name   [(ngModel)]="modalData!.event.id">
+    </div>
+    <div class="form-group">
+      <label for="Title">Title: </label>
+      <input type="text" class="form-control" id="Title"  #Title [(ngModel)]="modalData!.event.title">
+    </div>
+    <div class="form-group">
+      <label for="Description">Description: </label>
+      <input type="text" class="form-control" id="Description"  #Description [(ngModel)]="modalData!.event.description">
+    </div>
+    <div class="form-group">
+      <label for="Homework">Homework: </label>
+      <input type="text" class="form-control" id="Homework" #Homework [(ngModel)]="modalData!.event.homework">
+    </div>
+    <div class="form-group">
+      <div class="checkbox">
+        <label>Recursive: <input type="checkbox" #Recursive [(ngModel)]="modalData!.event.recursive">
+        </label>
+      </div>
+    </div>
+      <!-- (click) passes input value to add() and then clears the input -->
+      <button class="btn btn-danger" (click)="modify(Name.value, Title.value, Description.value, Homework.value, modalData!.event.recursive, modalData!.event.classId);
+      Name.value=''; Title.value=''; Description.value='';Homework.value=''; Recursive.value=''; close()">
+        Confirm Change
+      </button>
+
+  </div>
+
+
+  <div class="modal-body">
+    <div>
+      Action:
+      <pre>{{ modalData?.action }}</pre>
+    </div>
+    <div>
+      Event:
+      <pre>{{ modalData?.event | json }}</pre>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      OK
+    </button>
+  </div>
+</ng-template>

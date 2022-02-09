@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { StudentService } from "../student.service";
 import { MessageService } from "../message.service";
-import { Student } from "../student";
+import { Student, ClassDetail } from "../student";
 
+//TODO add a event edit part
 @Component({
   selector: 'app-student-modify',
   templateUrl: './student-modify.component.html',
@@ -17,9 +18,10 @@ export class StudentModifyComponent implements OnInit {
   }
 
   add(name: string, grade: string, payment: any, paymentPerClass: any): void {
+    const classDetails: ClassDetail[] = [{name: name,  _end: '0'}]
     name = name.trim();
     grade = grade.trim();
-    const student: Student = {name: name, grade: grade, payment: payment, paymentPerClass: paymentPerClass};
+    const student: Student = {name: name, grade: grade, payment: payment, paymentPerClass: paymentPerClass, classDetail: classDetails};
     if (!name) {
       this.messageService.add(`You must input name`);
       return;

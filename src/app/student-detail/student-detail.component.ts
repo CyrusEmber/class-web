@@ -3,6 +3,7 @@ import { Student } from '../student';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { StudentService} from "../student.service";
+import { ClassDetail } from "../student";
 
 @Component({
   selector: 'app-student-detail',
@@ -12,6 +13,8 @@ import { StudentService} from "../student.service";
 export class StudentDetailComponent implements OnInit {
   showModifyCom: boolean = false;
   showExpansion: boolean = false;
+  showCalendar: boolean = false;
+  classDetails: ClassDetail[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -38,6 +41,10 @@ export class StudentDetailComponent implements OnInit {
 
   expand(): void {
     this.showExpansion = !this.showExpansion;
+  }
+
+  calendar(): void {
+    this.showCalendar = !this.showCalendar;
   }
 
   save(name: string, grade: string, payment: any, paymentPerClass: any, date: string): void {

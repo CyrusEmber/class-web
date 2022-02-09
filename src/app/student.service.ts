@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Student } from './student'
+import { Student, ClassDetail } from './student'
 import { Students } from './mock-student'
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { catchError, map, tap } from 'rxjs/operators';
+import {CalendarEvent} from "angular-calendar";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
-  getUrl = 'http://192.168.0.104:8080/students';
-  addUrl = 'http://192.168.0.104:8080/addJson';
-  updateUrl = 'http://192.168.0.104:8080/students';
-  getSelectedUrl = 'http://192.168.0.104:8080/studentsSelect';
+  getUrl = 'http://127.0.0.1:8080/students'; // event
+  addUrl = 'http://127.0.0.1:8080/addJson';
+  updateUrl = 'http://127.0.0.1:8080/students';
+  eventUrl = 'http://127.0.0.1:8080/event'
+  getSelectedUrl = 'http://127.0.0.1:8080/studentsSelect';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -72,24 +74,23 @@ export class StudentService {
     const url = `${this.updateUrl}/${student.id}`;
     return this.http.put(url, JSON.stringify(student), this.httpOptions).pipe(
       tap(_ => this.log(`updated student name=${student.name}`)),
-      catchError(this.handleError<any>('updateHero'))
+      catchError(this.handleError<any>('updateStudent'))
     );
   }
 
-  /** DELETE: delete the hero from the server */
+  /** DELETE: delete the student from the server */
   deleteStudent(id: number): Observable<Student> {
     const url = `${this.updateUrl}/${id}`;
-
     return this.http.delete<Student>(url, this.httpOptions).pipe(
       tap(_ => this.log(`deleted student id=${id}`)),
       catchError(this.handleError<Student>('deleteStudent'))
     );
   }
 
-  /* GET heroes whose name contains search term */
+  /** GET students whose name contains search term */
   searchStudents(term: string): Observable<Student[]> {
     if (!term.trim()) {
-      // if not search term, return empty hero array.
+      // if not search term, return empty student array.
       return of([]);
     }
     return this.http.get<Student[]>(`${this.getSelectedUrl}/${term}`).pipe(
@@ -97,6 +98,57 @@ export class StudentService {
         this.log(`found students matching "${term}"`) :
         this.log(`no student matching "${term}"`)),
       catchError(this.handleError<Student[]>('searchStudents', []))
+    );
+  }
+
+  /** get all events for all students, this is for calendar component*/
+  getAllEvents(): Observable<Student> {
+    const url = `${this.getUrl}/events`;
+    return this.http.get<Student>(url).pipe(
+      tap(_ => this.log(`fetched all events`)),
+      catchError(this.handleError<Student>(`fetching events`))
+    );
+  }
+
+  /** get all events for a student, this is for student component, TODO:only for week view? */
+  getEvent(id: number): Observable<Student> {
+    // For now, assume that a student with the specified `id` always exists.
+    // Error handling will be added in the next step of the tutorial.
+    const url = `${this.getUrl}/${id}`;
+    return this.http.get<Student>(url).pipe(
+      tap(_ => this.log(`fetched student id=${id}`)),
+      catchError(this.handleError<Student>(`getStudent id=${id}`))
+    );
+  }
+
+  /** TODO: recursive event */
+  addEvent(event: ClassDetail){
+    this.log(`adding student's event whose name=${event.name}`);
+    // JSON.stringify
+    return this.http.post(this.addUrl, JSON.stringify(event),
+      {headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: "text" }).pipe(
+      tap(_ => this.log(`added student whose name=${event.name}`)),
+      catchError(this.handleError<Student>('addStudent'))
+    );
+  }
+
+  updateEvent(classDetail: ClassDetail): Observable<any> {
+    const url = `${this.eventUrl}`;
+    this.log('updating')
+    return this.http.put(url, JSON.stringify(classDetail),
+      {headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: "text" }).pipe(
+      tap(_ => this.log(`updated class event name=${classDetail.title}`)),
+      catchError(this.handleError<any>('updateEvent'))
+    );
+  }
+
+  /** DELETE: delete the event from the server */
+  deleteEvent(event: CalendarEvent): Observable<Student> {
+    const url = `${this.eventUrl}/${event.id}/${event.classId}`;
+
+    return this.http.delete<Student>(url, this.httpOptions).pipe(
+      tap(_ => this.log(`deleted class id=${event.classId}`)),
+      catchError(this.handleError<Student>('deleteEvent'))
     );
   }
 
@@ -119,5 +171,4 @@ export class StudentService {
       return of(result as T);
     };
   }
-
 }

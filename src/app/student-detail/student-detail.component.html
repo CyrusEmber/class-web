@@ -1,19 +1,22 @@
-<app-student-search></app-student-search>
-
+<br>
 <div *ngIf="student">
 
   <h2>{{student.name}} Details</h2>
-
   <div><p class="text">name: {{student.name}}</p></div>
-  <div><p class="text">date: {{student.date}}</p></div>
-  <div><p class="text">Class balance: {{student.payment / student.paymentPerClass}}</p></div>
-  <div *ngIf="showExpansion">
-    <div><span>id: </span>{{student.id}}</div>
-    <div><span>grade: </span>{{student.grade}}</div>
-    <div><span>payment: </span>{{student.payment}}</div>
-    <div><span>paymentPerClass: </span>{{student.paymentPerClass}}</div>
-  </div>
+  <div><p class="text">class balance: {{student.payment / student.paymentPerClass}}</p></div>
+
   <button (click)="expand()">Expand</button>
+
+  <div *ngIf="showExpansion">
+    <div><p class="text">id: {{student.id}}</p></div>
+    <div><p class="text">grade: {{student.grade}}</p></div>
+    <div><p class="text">payment: {{student.payment}}</p></div>
+    <div><p class="text">paymentPerClass: {{student.paymentPerClass}}</p></div>
+    <div *ngFor="let classDetails of student.classDetail">
+      <p class="text">class time: {{classDetails.start}}</p>
+    </div>
+  </div>
+
   <button (click)="modify()">Modify</button>
 
   <div *ngIf="showModifyCom">
@@ -49,7 +52,14 @@
     <br>
     <button (click)="save(Name.value, Grade.value, Payment.value, PaymentPerClass.value, Date.value)">save change</button>
   </div>
+  <button (click)="calendar()">Calendar</button>
 
   <button (click)="goBack()">go back</button>
+
+  <div *ngIf="showCalendar">
+    <calendar-component></calendar-component>
+  </div>
+
+
 
 </div>

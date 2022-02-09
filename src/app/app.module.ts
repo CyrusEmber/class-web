@@ -23,6 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { StudentModifyComponent } from './student-modify/student-modify.component';
 import { StudentSearchComponent } from './student-search/student-search.component';
 import { CalendarHeaderComponent } from './calendar-header/calendar-header.component';
+import {FlatpickrModule} from 'angularx-flatpickr';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { CalendarHeaderComponent } from './calendar-header/calendar-header.compo
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    FlatpickrModule.forRoot(),
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,

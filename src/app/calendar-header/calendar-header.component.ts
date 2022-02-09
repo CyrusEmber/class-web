@@ -13,7 +13,6 @@ export class CalendarHeaderComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  // type LogLevelStrings = keyof typeof LogLevel;
   @Input() view: CalendarView = CalendarView.Month ;
 
   @Input() viewDate: Date = new Date();
