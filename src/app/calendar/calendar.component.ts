@@ -141,6 +141,7 @@ export class CalendarComponent {
               ) {}
 
   ngOnInit(): void {
+    this.getEvents();
     this.students$ = this.searchTerms.pipe(
       // wait 300ms after each keystroke before considering the term
       debounceTime(300),
@@ -151,7 +152,6 @@ export class CalendarComponent {
       // switch to new search observable each time the term changes
       switchMap((term: string) => this.studentService.searchStudents(term)),
     );
-    this.getEvents();
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -183,7 +183,7 @@ export class CalendarComponent {
       }
       return iEvent;
     });
-    this.handleEvent('Dropped or resized', event);
+    // this.handleEvent('Dropped or resized', event); TODO debug
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
@@ -204,11 +204,10 @@ export class CalendarComponent {
     this.events = [
       ...this.events,
       {
-        classId: this.events.length + 1,
         title: 'New event',
         start: startOfDay(new Date()),
         end: endOfDay(new Date()),
-        color: colors.red,
+        color: colors.red.primary,
         draggable: true,
         resizable: {
           beforeStart: true,
@@ -229,9 +228,13 @@ export class CalendarComponent {
 
   saveEvent() {
     for (let i = 0; i < this.events.length; i++) {
+      this.messageService.add(JSON.stringify(this.events[i]))
       let classDetail = this.calendarService.eventToClassDetail(this.events[i]);
       this.messageService.add(JSON.stringify(classDetail))
+      this.messageService.add(JSON.stringify(this.events[i]))
       this.studentService.updateEvent(classDetail).subscribe(event => this.events[i] = event);
+      this.events = [];
+      this.getEvents();
     }
   }
 
@@ -253,26 +256,11 @@ export class CalendarComponent {
       .subscribe(events => this.events = this.calendarService.classDetailsToEvents(events))
   }
 
-  modify(name: string, title: string, description: string, homework: string, recursive: any, classId: any): void {
+  modify(event: CalendarEvent): void {
     // I made sure that all those attributes are defined by giving default empty string, recursive is by default false
-    name = name.trim();
-    title = title.trim();
-    // recursive passed test
-    let classDetail: ClassDetail;
-    if (classId) {
-      classDetail = {name: name, title: title, description:description, homework: homework, recursive: recursive, classId: classId}
-    } else {
-      classDetail = {name: name, title: title, description:description, homework: homework, recursive: recursive};
-    }
 
-    if (!name) {
-      this.messageService.add(`You must input name`);
-      return;
-    }
-    if (!title) {
-      this.messageService.add(`You must input title`);
-      return;
-    }
+    // recursive passed test
+    let classDetail = this.calendarService.eventToClassDetail(event);
 
     this.calendarService.updateEvent(classDetail).subscribe();
   }

@@ -50,7 +50,7 @@
 <br>
 <h3>
   Edit classes
-  <button class="btn btn-info float-right" (click)="saveEvent()">
+  <button class="btn btn-info float-right" (click)="saveEvent()" >
     Save events
   </button>
   <button class="btn btn-primary float-right" (click)="addEvent()">
@@ -167,33 +167,61 @@
     </button>
   </div>
 
-  <div style="margin-left: 1rem">
+  <div style="margin-left: 1.5rem; margin-right: 1.5rem">
     <p type="text">带星号的为必填项</p>
     <div >
       <label for="Name">Name: </label>
-      <input type="text" class="form-control" id="Name"  #Name   [(ngModel)]="modalData!.event.id">
+      <input type="text" class="form-control" id="Name" [(ngModel)]="modalData!.event.id">
     </div>
     <div class="form-group">
       <label for="Title">Title: </label>
-      <input type="text" class="form-control" id="Title"  #Title [(ngModel)]="modalData!.event.title">
+      <input type="text" class="form-control" id="Title" [(ngModel)]="modalData!.event.title">
     </div>
+    <label>Start: </label>
+    <input
+      class="form-control"
+      type="text"
+      mwlFlatpickr
+      [(ngModel)]="modalData!.event.start"
+      [altInput]="true"
+      [convertModelValue]="true"
+      [enableTime]="true"
+      dateFormat="Y-m-dTH:i"
+      altFormat="F j, Y H:i"
+      placeholder="Not set"
+      #Start
+    />
+    <label>End: </label>
+    <input
+      class="form-control"
+      type="text"
+      mwlFlatpickr
+      [(ngModel)]="modalData!.event.end"
+      [altInput]="true"
+      [convertModelValue]="true"
+      [enableTime]="true"
+      dateFormat="Y-m-dTH:i"
+      altFormat="F j, Y H:i"
+      placeholder="Not set"
+      #End
+    />
+
     <div class="form-group">
       <label for="Description">Description: </label>
-      <input type="text" class="form-control" id="Description"  #Description [(ngModel)]="modalData!.event.description">
+      <input type="text" class="form-control" id="Description" [(ngModel)]="modalData!.event.description">
     </div>
     <div class="form-group">
       <label for="Homework">Homework: </label>
-      <input type="text" class="form-control" id="Homework" #Homework [(ngModel)]="modalData!.event.homework">
+      <input type="text" class="form-control" id="Homework" [(ngModel)]="modalData!.event.homework">
     </div>
     <div class="form-group">
       <div class="checkbox">
-        <label>Recursive: <input type="checkbox" #Recursive [(ngModel)]="modalData!.event.recursive">
+        <label>Recursive: <input type="checkbox" [(ngModel)]="modalData!.event.recursive">
         </label>
       </div>
     </div>
       <!-- (click) passes input value to add() and then clears the input -->
-      <button class="btn btn-danger" (click)="modify(Name.value, Title.value, Description.value, Homework.value, modalData!.event.recursive, modalData!.event.classId);
-      Name.value=''; Title.value=''; Description.value='';Homework.value=''; Recursive.value=''; close()">
+      <button class="btn btn-danger" (click)="modify(modalData!.event); close()">
         Confirm Change
       </button>
 

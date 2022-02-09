@@ -134,7 +134,6 @@ export class StudentService {
 
   updateEvent(classDetail: ClassDetail): Observable<any> {
     const url = `${this.eventUrl}`;
-    this.log('updating')
     return this.http.put(url, JSON.stringify(classDetail),
       {headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: "text" }).pipe(
       tap(_ => this.log(`updated class event name=${classDetail.title}`)),

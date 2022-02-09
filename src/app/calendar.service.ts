@@ -14,7 +14,7 @@ export class CalendarService {
   // TODO error handler
   getUrl = 'http://127.0.0.1:8080/students/events';
   addUrl = 'http://127.0.0.1:8080/addJson';
-  updateEventUrl = 'http://127.0.0.1:8080/event';
+  eventUrl = 'http://127.0.0.1:8080/event';
   getSelectedUrl = 'http://127.0.0.1:8080/studentsSelect';
 
   httpOptions = {
@@ -42,11 +42,13 @@ export class CalendarService {
     // TODO check validation of id
     if (event.id === null) this.messageService.add("no name input");
     else classDetail.name = String(event.id);
+    // if there exists id
+    if (event.classId) classDetail.classId = event.classId;
 
     classDetail.title = event.title;
     classDetail.start = event.start.toISOString(); // toString format
     classDetail._end = event.end?.toISOString();
-    classDetail.color = event.color?.primary;
+    classDetail.color = event.color;
     classDetail.recursive = event.recursive;
     classDetail.description = event.description;
     classDetail.homework = event.homework;
@@ -63,8 +65,8 @@ export class CalendarService {
     }
 
     if (classDetail._end != null) event.end = new Date(classDetail._end);
-    if (classDetail.color != null && event.color != null)
-    event.color.primary = classDetail.color;
+
+    event.color = classDetail.color;
 
     event.id = classDetail.name;
     event.classId = classDetail.classId;
@@ -101,16 +103,17 @@ export class CalendarService {
   updateEvent(event: ClassDetail): Observable<any> {
     // check if the class exist by checking the classId and update or delete
     // TODO delete bind with delete button
-    const url = `${this.updateEventUrl}`;
+    const url = `${this.eventUrl}`;
     this.log("test")
-    return this.http.put(url, JSON.stringify(event), this.httpOptions).pipe(
+    return this.http.put(url, JSON.stringify(event),
+      {headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: "text" }).pipe(
       tap(_ => this.log(`updated event`)),
       catchError(this.handleError<any>('updateEvent'))
     );
   }
 
   deleteStudent(id: number): Observable<Student> {
-    const url = `${this.updateEventUrl}/${id}`;
+    const url = `${this.eventUrl}/${id}`;
     return this.http.delete<Student>(url, this.httpOptions).pipe(
       tap(_ => this.log(`deleted student id=${id}`)),
       catchError(this.handleError<Student>('deleteStudent'))
