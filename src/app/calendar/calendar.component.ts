@@ -88,7 +88,8 @@ export class CalendarComponent {
 
   refresh = new Subject<void>();
 
-  @Input() events: CalendarEvent[] = [];
+  @Input()
+  events: CalendarEvent[] = [];
 /*    {
       start: subDays(startOfDay(new Date()), 1),
       end: addDays(new Date(), 1),
@@ -228,14 +229,13 @@ export class CalendarComponent {
 
   saveEvent() {
     for (let i = 0; i < this.events.length; i++) {
-      this.messageService.add(JSON.stringify(this.events[i]))
       let classDetail = this.calendarService.eventToClassDetail(this.events[i]);
-      this.messageService.add(JSON.stringify(classDetail))
-      this.messageService.add(JSON.stringify(this.events[i]))
+      // this.messageService.add(JSON.stringify(classDetail))
+      // this.messageService.add(JSON.stringify(this.events[i]))
       this.studentService.updateEvent(classDetail).subscribe(event => this.events[i] = event);
-      this.events = [];
-      this.getEvents();
     }
+    this.events = [];
+    this.getEvents();
   }
 
   closeOpenMonthViewDay() {
@@ -251,7 +251,7 @@ export class CalendarComponent {
     this.searchTerms.next('');
   } // TODO name bind
 
-  getEvents(): void {
+  getEvents(): void { // TODO why it is lagging?
     this.calendarService.getEvents()
       .subscribe(events => this.events = this.calendarService.classDetailsToEvents(events))
   }

@@ -51,13 +51,14 @@
     <input id="student-id" [(ngModel)]="student.id" placeholder="id">
     <br>
     <button (click)="save(Name.value, Grade.value, Payment.value, PaymentPerClass.value, Date.value)">save change</button>
+    <button (click)="delete(); goBack()">delete student</button>
   </div>
   <button (click)="calendar()">Calendar</button>
 
   <button (click)="goBack()">go back</button>
 
   <div *ngIf="showCalendar">
-    <calendar-component></calendar-component>
+      <calendar-component [events]="event"></calendar-component>
   </div>
 
 

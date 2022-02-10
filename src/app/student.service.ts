@@ -111,13 +111,13 @@ export class StudentService {
   }
 
   /** get all events for a student, this is for student component, TODO:only for week view? */
-  getEvent(id: number): Observable<Student> {
+  getEvent(id: number): Observable<ClassDetail[]> {
     // For now, assume that a student with the specified `id` always exists.
     // Error handling will be added in the next step of the tutorial.
-    const url = `${this.getUrl}/${id}`;
-    return this.http.get<Student>(url).pipe(
-      tap(_ => this.log(`fetched student id=${id}`)),
-      catchError(this.handleError<Student>(`getStudent id=${id}`))
+    const url = `${this.eventUrl}/${id}`;
+    return this.http.get<Student[]>(url).pipe(
+      tap(_ => this.log(`fetched events for student id=${id}`)),
+      catchError(this.handleError<ClassDetail[]>(`getEvent for student id=${id}`))
     );
   }
 

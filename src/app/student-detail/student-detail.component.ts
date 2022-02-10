@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { StudentService} from "../student.service";
 import { ClassDetail } from "../student";
+import {CalendarService} from "../calendar.service";
+import {CalendarEvent} from "angular-calendar";
 
 @Component({
   selector: 'app-student-detail',
@@ -19,10 +21,12 @@ export class StudentDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private studentService: StudentService,
+    private calendarService: CalendarService,
     private location: Location) {}
 
   ngOnInit(): void {
     this.getStudent();
+    this.getEvent();
   }
 
   getStudent(): void {
@@ -31,12 +35,18 @@ export class StudentDetailComponent implements OnInit {
       .subscribe(student => this.student = student);
   }
 
+  getEvent() {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.studentService.getEvent(id)
+      .subscribe(event => this.event = this.calendarService.classDetailsToEvents(event))
+  }
+
   goBack(): void {
     this.location.back();
   }
 
   modify(): void {
-    this.showModifyCom = true;
+    this.showModifyCom = !this.showModifyCom;
   }
 
   expand(): void {
@@ -61,4 +71,5 @@ export class StudentDetailComponent implements OnInit {
   } //TODO confirm window popup
 
   @Input() student?: Student;
+  @Input() event!: CalendarEvent[];
 }
