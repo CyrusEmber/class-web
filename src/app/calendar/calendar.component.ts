@@ -90,6 +90,8 @@ export class CalendarComponent {
 
   @Input()
   events: CalendarEvent[] = [];
+  @Input()
+  name: string ="";
 /*    {
       start: subDays(startOfDay(new Date()), 1),
       end: addDays(new Date(), 1),
@@ -205,6 +207,7 @@ export class CalendarComponent {
     this.events = [
       ...this.events,
       {
+        id: this.name,
         title: 'New event',
         start: startOfDay(new Date()),
         end: endOfDay(new Date()),
@@ -247,9 +250,17 @@ export class CalendarComponent {
     this.searchTerms.next(term);
   }
 
-  deleteSearch():void {
+  deleteSearch(): void {
     this.searchTerms.next('');
   } // TODO name bind
+
+  disableInput(): boolean {
+    if (this.name!="") {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   getEvents(): void { // TODO why it is lagging?
     this.calendarService.getEvents()

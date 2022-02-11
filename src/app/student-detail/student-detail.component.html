@@ -58,7 +58,7 @@
   <button (click)="goBack()">go back</button>
 
   <div *ngIf="showCalendar">
-      <calendar-component [events]="event"></calendar-component>
+      <calendar-component [events]="event" [name]="student.name"></calendar-component>
   </div>
 
 

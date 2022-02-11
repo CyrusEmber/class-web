@@ -60,11 +60,11 @@
   <div class="clearfix"></div>
 </h3>
 <ul>
-    <p>Name list:</p>
+    <p class="form-control">Name list:</p>
     <li *ngFor="let student of students$ | async" >
-      <a>
+      <div class="form-control" >
         {{student.name}}
-      </a>
+      </div>
     </li>
 
 </ul>
@@ -84,18 +84,20 @@
     <tbody>
     <tr *ngFor="let event of events">
       <td>
-        <input
-          type="text"
-          class="form-control"
-          id="{{event.id}}"
-
-          [(ngModel)]="event.id"
-          (keyup)="refresh.next()"
-          #searchBox
-          (input)="search(searchBox.value)"
-          placeholder="name"
-          (blur) = "deleteSearch()"
-        />
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            id="{{event.id}}"
+            [(ngModel)]="event.id"
+            (keyup)="refresh.next()"
+            #searchBox
+            (input)="search(searchBox.value)"
+            placeholder="name"
+            (blur) = "deleteSearch()"
+            [disabled] = disableInput()
+          />
+        </div>
 
       </td>
 
