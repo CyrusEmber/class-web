@@ -27,6 +27,7 @@ import { MessageService } from "../message.service";
 import { CalendarService } from "../calendar.service";
 import {ClassDetail, Student} from "../student";
 import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
+// import RRule from 'rrule';
 
 const colors: any = {
   red: {
@@ -59,6 +60,7 @@ export class CalendarComponent {
   clickedColumn?: number;
 
   @ViewChild('modalContent', { static: true }) modalContent?: TemplateRef<any>;
+  @ViewChild('modalContent1', { static: true }) modalContent1?: TemplateRef<any>;
 
   CalendarView = CalendarView;
 
@@ -92,6 +94,8 @@ export class CalendarComponent {
   events: CalendarEvent[] = [];
   @Input()
   name: string ="";
+
+  event!: CalendarEvent;
 /*    {
       start: subDays(startOfDay(new Date()), 1),
       end: addDays(new Date(), 1),
@@ -144,17 +148,19 @@ export class CalendarComponent {
               ) {}
 
   ngOnInit(): void {
-    this.getEvents();
-    this.students$ = this.searchTerms.pipe(
-      // wait 300ms after each keystroke before considering the term
-      debounceTime(300),
+    if (this.name=="") {
+      this.getEvents();
+      this.students$ = this.searchTerms.pipe(
+        // wait 300ms after each keystroke before considering the term
+        debounceTime(300),
 
-      // ignore new term if same as previous term
-      distinctUntilChanged(),
+        // ignore new term if same as previous term
+        distinctUntilChanged(),
 
-      // switch to new search observable each time the term changes
-      switchMap((term: string) => this.studentService.searchStudents(term)),
-    );
+        // switch to new search observable each time the term changes
+        switchMap((term: string) => this.studentService.searchStudents(term)),
+      );
+    }
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -200,18 +206,37 @@ export class CalendarComponent {
     this.modalData = { event, action };
 
     this.messageService.add("event changed")
-      this.modal.open(this.modalContent, { size: 'lg' });
+    this.modal.open(this.modalContent, { size: 'lg' });
+  }
+
+  handleDelete(event: CalendarEvent): void {
+    this.event = event;
+    this.modal.open(this.modalContent1, { size: 'lg' });
   }
 
   addEvent(): void {
+    let color1;
+    // set event color the same as the first event when there is at least one event for a student
+    if (this.name == "") {
+      color1 = colors.red.primary;
+    } else {
+      if (this.events.length > 0 && this.events[0].color != undefined) {
+        color1 = this.events[0].color;
+      }
+      else {
+        color1 = colors.red.primary;
+      }
+    }
+
+
     this.events = [
       ...this.events,
       {
         id: this.name,
         title: 'New event',
         start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.red.primary,
+        end: addHours(startOfDay(new Date()), 2),
+        color: color1,
         draggable: true,
         resizable: {
           beforeStart: true,
@@ -255,11 +280,7 @@ export class CalendarComponent {
   } // TODO name bind
 
   disableInput(): boolean {
-    if (this.name!="") {
-      return true;
-    } else {
-      return false;
-    }
+    return this.name != "";
   }
 
   getEvents(): void { // TODO why it is lagging?

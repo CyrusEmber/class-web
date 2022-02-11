@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { Student } from '../student';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -6,6 +6,7 @@ import { StudentService} from "../student.service";
 import { ClassDetail } from "../student";
 import {CalendarService} from "../calendar.service";
 import {CalendarEvent} from "angular-calendar";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-student-detail',
@@ -19,6 +20,7 @@ export class StudentDetailComponent implements OnInit {
   classDetails: ClassDetail[] = [];
 
   constructor(
+    private modal: NgbModal,
     private route: ActivatedRoute,
     private studentService: StudentService,
     private calendarService: CalendarService,
@@ -70,6 +72,11 @@ export class StudentDetailComponent implements OnInit {
     this.studentService.deleteStudent(id).subscribe();
   } //TODO confirm window popup
 
+  handleDelete(): void {
+    this.modal.open(this.modalContent1, { size: 'lg' });
+  }
+
   @Input() student?: Student;
   @Input() event!: CalendarEvent[];
+  @ViewChild('modalContent1', { static: true }) modalContent1?: TemplateRef<any>;
 }

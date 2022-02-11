@@ -12,10 +12,10 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 })
 export class CalendarService {
   // TODO error handler
-  getUrl = 'http://127.0.0.1:8080/students/events';
-  addUrl = 'http://127.0.0.1:8080/addJson';
-  eventUrl = 'http://127.0.0.1:8080/event';
-  getSelectedUrl = 'http://127.0.0.1:8080/studentsSelect';
+  getUrl = 'http://192.168.0.104:8080/students/events';
+  addUrl = 'http://192.168.0.104:8080/addJson';
+  eventUrl = 'http://192.168.0.104:8080/event';
+  getSelectedUrl = 'http://192.168.0.104:8080/studentsSelect';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

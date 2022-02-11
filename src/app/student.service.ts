@@ -11,11 +11,11 @@ import {CalendarEvent} from "angular-calendar";
   providedIn: 'root'
 })
 export class StudentService {
-  getUrl = 'http://127.0.0.1:8080/students'; // event
-  addUrl = 'http://127.0.0.1:8080/addJson';
-  updateUrl = 'http://127.0.0.1:8080/students';
-  eventUrl = 'http://127.0.0.1:8080/event'
-  getSelectedUrl = 'http://127.0.0.1:8080/studentsSelect';
+  getUrl = 'http://192.168.0.104:8080/students'; // event
+  addUrl = 'http://192.168.0.104:8080/addJson';
+  updateUrl = 'http://192.168.0.104:8080/students';
+  eventUrl = 'http://192.168.0.104:8080/event'
+  getSelectedUrl = 'http://192.168.0.104:8080/studentsSelect';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

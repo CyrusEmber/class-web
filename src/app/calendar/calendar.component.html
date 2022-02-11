@@ -59,7 +59,7 @@
 
   <div class="clearfix"></div>
 </h3>
-<ul>
+<ul *ngIf="this.name == ''">
     <p class="form-control">Name list:</p>
     <li *ngFor="let student of students$ | async" >
       <div class="form-control" >
@@ -151,7 +151,7 @@
         />
       </td>
       <td>
-        <button class="btn btn-danger" (click)="delete(event); deleteEvent(event); ">
+        <button class="btn btn-danger" (click)="handleDelete(event); ">
           Delete
         </button>
       </td>
@@ -163,7 +163,7 @@
 <!-- popup window for modify event -->
 <ng-template #modalContent let-close="close">
   <div class="modal-header">
-    <h5 class="modal-title">Event action occurred</h5>
+    <h5 class="modal-title">Editing event</h5>
     <button type="button" class="close" (click)="close()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -243,6 +243,27 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-secondary" (click)="close()">
       OK
+    </button>
+  </div>
+</ng-template>
+
+
+<ng-template #modalContent1 let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Confirm delete</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p type="text">Are you sure you want to delete this?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="delete(event); deleteEvent(event); close()">
+      YES
+    </button>
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      NO
     </button>
   </div>
 </ng-template>

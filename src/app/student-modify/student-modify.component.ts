@@ -18,10 +18,10 @@ export class StudentModifyComponent implements OnInit {
   }
 
   add(name: string, grade: string, payment: any, paymentPerClass: any): void {
-    const classDetails: ClassDetail[] = [{name: name,  _end: '0'}]
+
     name = name.trim();
     grade = grade.trim();
-    const student: Student = {name: name, grade: grade, payment: payment, paymentPerClass: paymentPerClass, classDetail: classDetails};
+    const student: Student = {name: name, grade: grade, payment: payment, paymentPerClass: paymentPerClass};
     if (!name) {
       this.messageService.add(`You must input name`);
       return;
