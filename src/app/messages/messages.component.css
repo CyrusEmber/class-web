@@ -4,15 +4,11 @@ h2 {
   font-weight: lighter;
 }
 
-.clear {
-  color: #333;
-  background-color: #eee;
-  margin-bottom: 12px;
-  padding: 1rem;
-  border-radius: 4px;
-  font-size: 1rem;
+#scroll-container {
+  border: 3px solid black;
+  border-radius: 5px;
+  height: 125px;
+  overflow-y: scroll;
 }
-.clear:hover {
-  color: white;
-  background-color: #42545C;
-}
+
+

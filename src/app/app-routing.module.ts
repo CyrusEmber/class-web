@@ -9,17 +9,27 @@ import { StudentsComponent } from "./students/students.component";
 import { StudentDetailComponent } from "./student-detail/student-detail.component";
 import { CalendarComponent } from "./calendar/calendar.component";
 import { StudentModifyComponent } from "./student-modify/student-modify.component";
+import { ServiceResolverService } from "./service/service-resolver.service";
+import { LoginAuthComponent } from "./auth/login-auth/login-auth.component";
+import {AuthGuard} from "./auth/auth.guard";
 
 const routes: Routes = [
+  { path: '', redirectTo: '', pathMatch: 'full' },
   { path: 'users', component: UserComponent },
   { path: 'helper', component: HelperComponent},
-  { path: 'detail/:id', component: StudentDetailComponent },
+  { path: 'detail/:id', component: StudentDetailComponent},
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'student', component: StudentsComponent },
-  { path: 'calendar', component: CalendarComponent },
+  { path: 'calendar', component: CalendarComponent, resolve: { events: ServiceResolverService } },
   { path: 'modify', component: StudentModifyComponent },
-  { path: '', redirectTo: '', pathMatch: 'full' },
+  { path: 'admin', component: LoginAuthComponent, canActivate: [AuthGuard],
+    children:[
+      { path:'',
+      children:[
+        { path: 'calendar', component: CalendarComponent}]
+    }]},
+
 ];
 
 @NgModule({

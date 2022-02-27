@@ -50,10 +50,10 @@
 <br>
 <h3>
   Edit classes
-  <button class="btn btn-info float-right" (click)="saveEvent()" >
+  <button class="btn btn-info float-right" (click)="saveEvent()" [hidden]="!authenticated()">
     Save events
   </button>
-  <button class="btn btn-primary float-right" (click)="addEvent()">
+  <button class="btn btn-primary float-right mr-2" (click)="addEvent()" [hidden]="!authenticated()">
     Add new
   </button>
 
@@ -77,7 +77,7 @@
       <th>Color</th>
       <th>Starts at</th>
       <th>Ends at</th>
-      <th>Remove</th>
+      <th [hidden]="!authenticated()">Remove</th>
     </tr>
     </thead>
 
@@ -90,7 +90,7 @@
             class="form-control"
             id="{{event.id}}"
             [(ngModel)]="event.id"
-            (keyup)="refresh.next()"
+            (keyup)="refresh.next(); event.modified = true"
             #searchBox
             (input)="search(searchBox.value)"
             placeholder="name"
@@ -106,15 +106,16 @@
           type="text"
           class="form-control"
           [(ngModel)]="event.title"
-          (keyup)="refresh.next()"
+          (keyup)="refresh.next(); event.modified = true"
           #Title
         />
       </td>
       <td>
         <input
           type="color"
-          [(ngModel)]="event.color"
-          (change)="refresh.next()"
+          [(ngModel)]="event.color!.primary"
+          [(ngModel)]="event.color!.secondary"
+          (change)="refresh.next(); event.modified = true"
           #Color
         />
       </td>
@@ -124,7 +125,7 @@
           type="text"
           mwlFlatpickr
           [(ngModel)]="event.start"
-          (ngModelChange)="refresh.next()"
+          (ngModelChange)="refresh.next(); event.modified = true"
           [altInput]="true"
           [convertModelValue]="true"
           [enableTime]="true"
@@ -140,7 +141,7 @@
           type="text"
           mwlFlatpickr
           [(ngModel)]="event.end"
-          (ngModelChange)="refresh.next()"
+          (ngModelChange)="refresh.next(); event.modified = true"
           [altInput]="true"
           [convertModelValue]="true"
           [enableTime]="true"
@@ -150,7 +151,7 @@
           #End
         />
       </td>
-      <td>
+      <td [hidden]="!authenticated()">
         <button class="btn btn-danger" (click)="handleDelete(event); ">
           Delete
         </button>
@@ -173,11 +174,15 @@
     <p type="text">带星号的为必填项</p>
     <div >
       <label for="Name">Name: </label>
-      <input type="text" class="form-control" id="Name" [(ngModel)]="modalData!.event.id">
+      <input type="text" class="form-control" id="Name" [disabled] = disableInput()
+             [(ngModel)]="modalData!.event.id"
+             (change)="refresh.next(); modalData!.event.modified = true">
     </div>
     <div class="form-group">
       <label for="Title">Title: </label>
-      <input type="text" class="form-control" id="Title" [(ngModel)]="modalData!.event.title">
+      <input type="text" class="form-control" id="Title"
+             [(ngModel)]="modalData!.event.title"
+             (change)="refresh.next(); modalData!.event.modified = true">
     </div>
     <label>Start: </label>
     <input
@@ -188,6 +193,7 @@
       [altInput]="true"
       [convertModelValue]="true"
       [enableTime]="true"
+      (ngModelChange)="refresh.next(); modalData!.event.modified = true"
       dateFormat="Y-m-dTH:i"
       altFormat="F j, Y H:i"
       placeholder="Not set"
@@ -202,6 +208,7 @@
       [altInput]="true"
       [convertModelValue]="true"
       [enableTime]="true"
+      (ngModelChange)="refresh.next(); modalData!.event.modified = true"
       dateFormat="Y-m-dTH:i"
       altFormat="F j, Y H:i"
       placeholder="Not set"
@@ -210,20 +217,28 @@
 
     <div class="form-group">
       <label for="Description">Description: </label>
-      <input type="text" class="form-control" id="Description" [(ngModel)]="modalData!.event.description">
+      <input type="text" class="form-control" id="Description"
+             [(ngModel)]="modalData!.event.description"
+             (change)="refresh.next(); modalData!.event.modified = true">
     </div>
     <div class="form-group">
       <label for="Homework">Homework: </label>
-      <input type="text" class="form-control" id="Homework" [(ngModel)]="modalData!.event.homework">
+      <input type="text" class="form-control" id="Homework"
+             [(ngModel)]="modalData!.event.homework"
+             (change)="refresh.next(); modalData!.event.modified = true">
     </div>
     <div class="form-group">
       <div class="checkbox">
-        <label>Recursive: <input type="checkbox" [(ngModel)]="modalData!.event.recursive">
+        <label>Class Finished: <input type="checkbox"
+                                      [(ngModel)]="modalData!.event.finished"
+                                      (change)="refresh.next(); modalData!.event.modified = true">
         </label>
       </div>
     </div>
       <!-- (click) passes input value to add() and then clears the input -->
-      <button class="btn btn-danger" (click)="modify(modalData!.event); close()">
+      <button class="btn btn-danger"
+              (click)="modify(modalData!.event); modalData!.event.modified = false ;close()"
+              [hidden]="!authenticated()">
         Confirm Change
       </button>
 
@@ -259,7 +274,9 @@
     <p type="text">Are you sure you want to delete this?</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="delete(event); deleteEvent(event); close()">
+    <button type="button" class="btn btn-outline-secondary"
+            (click)="delete(event); deleteEvent(event); close()"
+            [hidden]="!authenticated()">
       YES
     </button>
     <button type="button" class="btn btn-outline-secondary" (click)="close()">

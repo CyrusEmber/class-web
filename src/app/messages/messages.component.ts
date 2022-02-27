@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MessageService } from '../message.service';
+import { MessageService } from '../service/message.service';
 
 @Component({
   selector: 'app-messages',
@@ -7,10 +7,14 @@ import { MessageService } from '../message.service';
   styleUrls: ['./messages.component.css']
 })
 export class MessagesComponent implements OnInit {
+  showMes: boolean = true;
 
   constructor(public messageService: MessageService) { }
 
   ngOnInit(): void {
   }
 
+  showMessage() {
+    this.showMes = !this.showMes;
+  }
 }

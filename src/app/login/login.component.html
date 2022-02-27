@@ -1,30 +1,18 @@
-<form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
 
-  <div>
-    <label for="account">
-      Account
-    </label>
-    <br>
-    <input id="account" type="text" formControlName="account">
+
+
+<div class="alert alert-danger" [hidden]="true">
+  There was a problem logging in. Please try again.
+</div>
+<form role="form" (submit)="login()" [hidden]="authenticated()">
+  <div class="form-group w-auto">
+    <label for="username">Username:</label> <input type="text"
+                                                   class="form-control" id="username" name="username" [(ngModel)]="credentials.username"/>
   </div>
-
-  <div>
-    <label for="account">
-      Password
-    </label>
-    <br>
-    <input id="password" type="password" formControlName="password">
+  <div class="form-group w-auto">
+    <label for="password">Password:</label> <input type="password"
+                                                   class="form-control" id="password" name="passwords" [(ngModel)]="credentials.password"/>
   </div>
-
-  <button class="button" type="submit">Confirm</button>
-
-  <select class="form-control">
-    <option value="4444">4444</option>
-    <option value="Fedex">Fedex</option>
-    <option value="Elite">Elite</option>
-    <option value="Interp">Interp</option>
-    <option value="Test">Test</option>
-  </select>
-
-
+  <button type="submit" class="btn btn-primary mr-2">Login</button>
+  <button class="btn btn-primary mr-2" routerLink = "/register">Register</button>
 </form>

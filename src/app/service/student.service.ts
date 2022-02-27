@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Student, ClassDetail } from './student'
-import { Students } from './mock-student'
+import { Student, ClassDetail } from '../student'
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { catchError, map, tap } from 'rxjs/operators';
-import {CalendarEvent} from "angular-calendar";
+import {Global} from "../Global";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
-  getUrl = 'http://192.168.0.104:8080/students'; // event
-  addUrl = 'http://192.168.0.104:8080/addJson';
-  updateUrl = 'http://192.168.0.104:8080/students';
-  eventUrl = 'http://192.168.0.104:8080/event'
-  getSelectedUrl = 'http://192.168.0.104:8080/studentsSelect';
+  // url for guest
+  getUrl = Global.generateUrl('guest', 'students');
+  addUrl = Global.generateUrl('guest', 'students/add');
+  getSelectedUrl = Global.generateUrl('guest', 'studentsSelect');
+  updateUrl = this.getUrl;
+
+
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -28,6 +29,15 @@ export class StudentService {
     let now: Date = new Date();
     this.messageService.add(now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds()
       + ` StudentService: ${message}`);
+  }
+
+  resetUrl(authenticated: boolean) {
+    if(authenticated) {
+      this.getUrl = Global.generateUrl('admin', 'students');
+      this.addUrl = Global.generateUrl('admin', 'students/add')
+      this.getSelectedUrl = Global.generateUrl('admin', 'studentsSelect');
+      this.updateUrl = this.getUrl;
+    }
   }
 
   getStudents(): Observable<Student[]> {
@@ -98,56 +108,6 @@ export class StudentService {
         this.log(`found students matching "${term}"`) :
         this.log(`no student matching "${term}"`)),
       catchError(this.handleError<Student[]>('searchStudents', []))
-    );
-  }
-
-  /** get all events for all students, this is for calendar component*/
-  getAllEvents(): Observable<Student> {
-    const url = `${this.getUrl}/events`;
-    return this.http.get<Student>(url).pipe(
-      tap(_ => this.log(`fetched all events`)),
-      catchError(this.handleError<Student>(`fetching events`))
-    );
-  }
-
-  /** get all events for a student, this is for student component, TODO:only for week view? */
-  getEvent(id: number): Observable<ClassDetail[]> {
-    // For now, assume that a student with the specified `id` always exists.
-    // Error handling will be added in the next step of the tutorial.
-    const url = `${this.eventUrl}/${id}`;
-    return this.http.get<Student[]>(url).pipe(
-      tap(_ => this.log(`fetched events for student id=${id}`)),
-      catchError(this.handleError<ClassDetail[]>(`getEvent for student id=${id}`))
-    );
-  }
-
-  /** TODO: recursive event */
-  addEvent(event: ClassDetail){
-    this.log(`adding student's event whose name=${event.name}`);
-    // JSON.stringify
-    return this.http.post(this.addUrl, JSON.stringify(event),
-      {headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: "text" }).pipe(
-      tap(_ => this.log(`added student whose name=${event.name}`)),
-      catchError(this.handleError<Student>('addStudent'))
-    );
-  }
-
-  updateEvent(classDetail: ClassDetail): Observable<any> {
-    const url = `${this.eventUrl}`;
-    return this.http.put(url, JSON.stringify(classDetail),
-      {headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: "text" }).pipe(
-      tap(_ => this.log(`updated class event name=${classDetail.title}`)),
-      catchError(this.handleError<any>('updateEvent'))
-    );
-  }
-
-  /** DELETE: delete the event from the server */
-  deleteEvent(event: CalendarEvent): Observable<Student> {
-    const url = `${this.eventUrl}/${event.id}/${event.classId}`;
-
-    return this.http.delete<Student>(url, this.httpOptions).pipe(
-      tap(_ => this.log(`deleted class id=${event.classId}`)),
-      catchError(this.handleError<Student>('deleteEvent'))
     );
   }
 

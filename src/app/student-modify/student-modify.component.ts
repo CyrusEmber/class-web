@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { StudentService } from "../student.service";
-import { MessageService } from "../message.service";
+import { StudentService } from "../service/student.service";
+import { MessageService } from "../service/message.service";
 import { Student, ClassDetail } from "../student";
 
 //TODO add a event edit part

@@ -16,16 +16,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'WebstormProjectsLloginWeb'`, () => {
+  it(`should have as title 'Class Calendar'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('WebstormProjectsLloginWeb');
+    expect(app.title).toEqual('Class Calendar');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('WebstormProjectsLloginWeb app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('Class Calendar app is running!');
   });
 });

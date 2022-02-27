@@ -1,23 +1,47 @@
 <br>
 <div *ngIf="student">
 
-  <h2>{{student.name}} Details</h2>
-  <div><p class="text">name: {{student.name}}</p></div>
+  <h2 class="text-capitalize">{{student.name}}</h2>
   <div><p class="text">class balance: {{student.payment / student.paymentPerClass}}</p></div>
 
-  <button (click)="expand()">Expand</button>
+  <button class="btn btn-outline-secondary" (click)="expand()">More Info</button>
+  <button class="btn btn-outline-secondary" (click)="modify()">Modify</button>
+  <button class="btn btn-outline-secondary" (click)="calendar()">Calendar</button>
+  <button class="btn btn-outline-secondary" (click)="goBack()">Back</button>
+
 
   <div *ngIf="showExpansion">
-    <div><p class="text">id: {{student.id}}</p></div>
-    <div><p class="text">grade: {{student.grade}}</p></div>
-    <div><p class="text">payment: {{student.payment}}</p></div>
-    <div><p class="text">paymentPerClass: {{student.paymentPerClass}}</p></div>
+    <table class="table table-light">
+      <thead class="thead-light">
+      <tr>
+        <th scope="row">#</th>
+        <td>Id:</td>
+        <td>{{student.id}}</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Grade:</td>
+        <td>{{student.grade}}</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Payment:</td>
+        <td>{{student.payment}}</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>PaymentPerClass:</td>
+        <td>{{student.paymentPerClass}}</td>
+      </tr>
+      </tbody>
+    </table>
+
     <div *ngFor="let classDetails of student.classDetail">
       <p class="text">class time: {{classDetails.start}}</p>
     </div>
   </div>
-
-  <button (click)="modify()">Modify</button>
 
   <div *ngIf="showModifyCom">
     <label for="student-name">student name: </label>
@@ -29,10 +53,6 @@
     <br>
     <input id="student-grade" [(ngModel)]="student.grade" placeholder="grade" #Grade>
 
-    <br>
-    <label for="student-date">student date: </label>
-    <br>
-    <input id="student-date" [(ngModel)]="student.date" placeholder="date" #Date>
 
     <br>
     <label for="student-payment">student payment: </label>
@@ -50,15 +70,14 @@
     <br>
     <input id="student-id" [(ngModel)]="student.id" placeholder="id">
     <br>
-    <button (click)="save(Name.value, Grade.value, Payment.value, PaymentPerClass.value, Date.value)">save change</button>
-    <button (click)="handleDelete();">delete student</button>
+    <button type="button" class="btn btn-danger  mr-1 mt-2"
+            (click)="save(Name.value, Grade.value, Payment.value, PaymentPerClass.value)">save change</button>
+    <button type="button" class="btn btn-danger mt-2" (click)="handleDeleteStudent();">delete student</button>
   </div>
-  <button (click)="calendar()">Calendar</button>
 
-  <button (click)="goBack()">go back</button>
 
   <div *ngIf="showCalendar">
-      <calendar-component [events]="event" [name]="student.name"></calendar-component>
+      <calendar-component [events]="events" [name]="student.name" [id]="id"></calendar-component>
   </div>
 </div>
 <ng-template #modalContent1 let-close="close">
@@ -80,3 +99,24 @@
     </button>
   </div>
 </ng-template>
+
+<ng-template #modalContentEvent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Confirm delete</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p type="text">Are you sure you want to delete this?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="deleteEvent(event); close()">
+      YES
+    </button>
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      NO
+    </button>
+  </div>
+</ng-template>
+

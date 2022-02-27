@@ -22,5 +22,5 @@ export interface ClassDetail {
   color?: string;
   description?: string;
   homework?: string;
-  recursive?: boolean;
+  finished?: boolean;
 }

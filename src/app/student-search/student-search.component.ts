@@ -4,7 +4,7 @@ import {
   debounceTime, distinctUntilChanged, switchMap
 } from 'rxjs/operators';
 import { Student } from '../student';
-import { StudentService } from "../student.service";
+import { StudentService } from "../service/student.service";
 
 
 @Component({

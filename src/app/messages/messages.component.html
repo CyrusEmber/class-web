@@ -1,8 +1,16 @@
 <div *ngIf="messageService.messages.length">
 
-  <h2>Messages</h2>
-  <div *ngFor='let message of messageService.messages'> {{message}} </div>
-  <button class="clear"
+  <button type="button" class="btn btn-outline-info btn-lg mb-2 mt-2" (click)="showMessage()">
+    Messages
+    <span class="badge badge-light">{{messageService.messages.length}}</span>
+  </button>
+  <div [hidden]="showMes">
+  <div id="scroll-container" >
+    <div id="scroll-text">
+      <div *ngFor='let message of messageService.messages'> {{message}} </div>
+    </div>
+  </div>
+  <button type="button" class="btn btn-outline-info mt-2"
           (click)="messageService.clear()">Clear messages</button>
-
+  </div>
 </div>

@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 import { UserComponent } from './user/user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
-import { BottomBarComponent } from './bottom-bar/bottom-bar.component';
+import { BottomBarComponent } from './bar/bottom-bar/bottom-bar.component';
 import { HelperComponent } from './helper/helper.component';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { LoginComponent } from './login/login.component';
@@ -19,11 +19,14 @@ import { StudentsComponent } from './students/students.component';
 import { StudentDetailComponent } from './student-detail/student-detail.component';
 import { MessagesComponent } from './messages/messages.component';
 import { CalendarComponent } from './calendar/calendar.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { StudentModifyComponent } from './student-modify/student-modify.component';
 import { StudentSearchComponent } from './student-search/student-search.component';
 import { CalendarHeaderComponent } from './calendar-header/calendar-header.component';
-import {FlatpickrModule} from 'angularx-flatpickr';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { HttpInterceptorService } from "./service/http-interceptor.service";
+import { LoginAuthComponent } from './auth/login-auth/login-auth.component';
+import { TopBarComponent } from './bar/top-bar/top-bar.component';
 
 
 @NgModule({
@@ -41,7 +44,9 @@ import {FlatpickrModule} from 'angularx-flatpickr';
     CalendarComponent,
     StudentModifyComponent,
     StudentSearchComponent,
-    CalendarHeaderComponent
+    CalendarHeaderComponent,
+    LoginAuthComponent,
+    TopBarComponent
   ],
   imports: [
     HttpClientModule,
@@ -56,7 +61,12 @@ import {FlatpickrModule} from 'angularx-flatpickr';
       useFactory: adapterFactory,
     }),
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS,
+    useClass: HttpInterceptorService,
+    multi: true },],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
