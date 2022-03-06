@@ -242,6 +242,19 @@
         Confirm Change
       </button>
 
+    <div class="mt-2">
+      <button class="btn btn-outline-primary"
+              (click)="copyEventsForMonth(modalData!.event); close()"
+              [hidden]="!authenticated()">
+        Month events
+      </button>
+
+      <button class="btn btn-outline-primary"
+              (click)="copyEvent(modalData!.event); close()">
+        Copy Event
+      </button>
+    </div>
+
   </div>
 
 

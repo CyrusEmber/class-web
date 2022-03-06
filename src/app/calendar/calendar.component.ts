@@ -12,7 +12,7 @@ import {
   endOfMonth,
   isSameDay,
   isSameMonth,
-  addHours,
+  addHours, startOfMonth, addWeeks, subWeeks,
 } from 'date-fns';
 import {Observable, Subject} from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -291,7 +291,7 @@ export class CalendarComponent {
   modify(event: CalendarEvent): void {
     // I made sure that all those attributes are defined by giving default empty string, recursive is by default false
     // recursive passed test
-    // FIXME bug: repeat class id (fixed by adding subscribe)
+    // bug: repeat class id (fixed by adding subscribe)
     let classDetail = this.calendarService.eventToClassDetail(event);
     event.modified = false;
     this.calendarService.updateEvent(classDetail).subscribe(responseData => {
@@ -299,6 +299,57 @@ export class CalendarComponent {
         event.classId = Number(responseData);
       }
     });
+  }
+
+  copyEvent(event: CalendarEvent): void { // the new event's class id should be undefined
+    this.events = [
+      ...this.events,
+      {
+        ...event,
+        classId: undefined,
+        modified: true
+      },
+    ];
+  }
+
+
+  copyEventsForMonth(event: CalendarEvent): void {
+    // by default all the days are in same date
+    let dayDuplicated = Math.floor(event.start.getDate() / 7)
+    let startDate = event.start;
+    let startHour = event.start.getHours();
+    let endHour = event.end?.getHours();
+    let endDate = new Date();
+    this.messageService.add(String(event.start.getHours()));
+    this.messageService.add(String(event.end!.getHours()));
+
+    while (isSameMonth(startDate, subWeeks(startDate, 1))) {
+      startDate = subWeeks(startDate, 1);
+    }
+    if (endHour)
+      endDate = addHours(startDate, (endHour - startHour));
+    else
+      endDate = startDate;
+
+    for (let offset = 0; offset < 5; offset++) {
+      if (offset != dayDuplicated && isSameMonth(startDate, addWeeks(startDate, offset))) {
+        this.events = [
+          ...this.events,
+          {
+            ...event,
+            classId: undefined,
+            modified: true,
+            start: addWeeks(startDate, offset),
+            end: addWeeks(endDate, offset),
+            description: "",
+            homework: "",
+
+          },
+        ];
+      }
+    }
+
+
   }
 
   delete(event: CalendarEvent) {

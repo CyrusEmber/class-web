@@ -5,13 +5,14 @@ import {catchError, tap} from "rxjs/operators";
 import {MessageService} from "./message.service";
 import {StudentService} from "./student.service";
 import {CalendarService} from "./calendar.service";
+import { Global } from "../Global";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
   routerUrl = 'http://192.168.1.2';
-  authUrl = this.routerUrl + ':8081/auth';
+  authUrl = Global.generateUrl('','auth')
   authenticated = false;
   credentials = {username: '', password: ''};
 
